@@ -5,6 +5,7 @@
 #![feature(box_syntax)]
 #![feature(custom_attribute)]
 #![feature(custom_derive)]
+#![feature(ip_addr)]
 #![feature(plugin)]
 #![feature(slice_patterns)]
 #![feature(step_by)]

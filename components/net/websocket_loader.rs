@@ -13,12 +13,12 @@ use std::ascii::AsciiExt;
 use std::sync::{Arc, Mutex, RwLock};
 use std::thread;
 use util::thread::spawn_named;
-use websocket::client::receiver::Receiver;
 use websocket::client::request::Url;
-use websocket::client::sender::Sender;
 use websocket::header::{Headers, Origin, WebSocketProtocol};
 use websocket::message::Type;
+use websocket::receiver::Receiver;
 use websocket::result::{WebSocketError, WebSocketResult};
+use websocket::sender::Sender;
 use websocket::stream::WebSocketStream;
 use websocket::ws::receiver::Receiver as WSReceiver;
 use websocket::ws::sender::Sender as Sender_Object;
@@ -32,8 +32,8 @@ fn establish_a_websocket_connection(resource_url: &Url, net_url: (Host, String, 
     -> WebSocketResult<(Headers, Sender<WebSocketStream>, Receiver<WebSocketStream>)> {
 
     let host = Host {
-        hostname: resource_url.serialize_host().unwrap(),
-        port: resource_url.port_or_default()
+        hostname: resource_url.host_str().unwrap().to_owned(),
+        port: resource_url.port_or_known_default(),
     };
 
     let mut request = try!(Client::connect(net_url));

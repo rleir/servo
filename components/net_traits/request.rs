@@ -200,7 +200,7 @@ impl Request {
     }
 
     pub fn get_last_url_string(&self) -> String {
-        self.url_list.borrow().last().unwrap().serialize()
+        self.url_list.borrow().last().unwrap().as_str().to_owned()
     }
 
     pub fn current_url(&self) -> Url {

@@ -108,7 +108,7 @@ use style::context::ReflowGoal;
 use style::restyle_hints::ElementSnapshot;
 use style::servo::Stylesheet;
 use time;
-use url::percent_encoding::percent_decode;
+use url::percent_encoding::utf8_percent_decode;
 use url::{Host, Url};
 use util::str::{DOMString, split_html_space_chars, str_join};
 
@@ -523,7 +523,7 @@ impl Document {
             self.GetDocumentElement()
         } else {
             // Step 3 & 4
-            String::from_utf8(percent_decode(fragid.as_bytes())).ok()
+            utf8_percent_decode(fragid.as_bytes()).ok()
                 // Step 5
                 .and_then(|decoded_fragid| self.get_element_by_id(&Atom::from(&*decoded_fragid)))
                 // Step 6
@@ -1733,7 +1733,7 @@ impl DocumentMethods for Document {
 
     // https://dom.spec.whatwg.org/#dom-document-url
     fn URL(&self) -> DOMString {
-        DOMString::from(self.url().serialize())
+        DOMString::from(self.url().as_str())
     }
 
     // https://html.spec.whatwg.org/multipage/#dom-document-activeelement
@@ -1776,12 +1776,12 @@ impl DocumentMethods for Document {
         // TODO: This should use the effective script origin when it exists
         let origin = self.window.get_url();
 
-        if let Some(&Host::Ipv6(ipv6)) = origin.host() {
+        if let Some(Host::Ipv6(ipv6)) = origin.host() {
             // Omit square brackets for IPv6 addresses.
             return DOMString::from(ipv6.to_string());
         }
 
-        DOMString::from(origin.serialize_host().unwrap_or_else(|| "".to_owned()))
+        DOMString::from(origin.host_str().unwrap_or(""))
     }
 
     // https://dom.spec.whatwg.org/#dom-document-documenturi
@@ -2381,7 +2381,7 @@ impl DocumentMethods for Document {
     fn GetCookie(&self) -> Fallible<DOMString> {
         // TODO: return empty string for cookie-averse Document
         let url = self.url();
-        if !is_scheme_host_port_tuple(&url) {
+        if !url.origin().is_tuple() {
             return Err(Error::Security);
         }
         let (tx, rx) = ipc::channel().unwrap();
@@ -2394,7 +2394,7 @@ impl DocumentMethods for Document {
     fn SetCookie(&self, cookie: DOMString) -> ErrorResult {
         // TODO: ignore for cookie-averse Document
         let url = self.url();
-        if !is_scheme_host_port_tuple(url) {
+        if !url.origin().is_tuple() {
             return Err(Error::Security);
         }
         let _ = self.window
@@ -2535,10 +2535,6 @@ impl DocumentMethods for Document {
 
     // https://html.spec.whatwg.org/multipage/#handler-onreadystatechange
     event_handler!(readystatechange, GetOnreadystatechange, SetOnreadystatechange);
-}
-
-fn is_scheme_host_port_tuple(url: &Url) -> bool {
-    url.host().is_some() && url.port_or_default().is_some()
 }
 
 fn update_with_current_time(marker: &Cell<u64>) {

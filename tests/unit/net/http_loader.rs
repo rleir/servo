@@ -1082,7 +1082,7 @@ fn test_load_errors_when_there_is_too_many_redirects() {
 
         fn create(&self, url: Url, _: Method) -> Result<MockRequest, LoadError> {
             if url.domain().unwrap() == "mozilla.com" {
-                Ok(MockRequest::new(ResponseType::Redirect(format!("{}/1", url.serialize()))))
+                Ok(MockRequest::new(ResponseType::Redirect(format!("{}/1", url))))
             } else {
                 panic!("unexpected host {:?}", url)
             }

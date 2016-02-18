@@ -5,6 +5,8 @@
 #![feature(plugin)]
 #![plugin(plugins)]
 
+#![feature(ip_addr)]
+
 extern crate cookie as cookie_rs;
 extern crate devtools_traits;
 extern crate flate2;

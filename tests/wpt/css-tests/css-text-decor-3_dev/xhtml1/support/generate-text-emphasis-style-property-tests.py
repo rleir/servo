@@ -45,7 +45,7 @@ DATA_SET = [
 SUFFIXES = ['', 'a', 'b', 'c', 'd', 'e']
 
 def get_html_entity(code):
-    return '&#x{:04X};'.format(code)
+    return '&#x{0:04X};'.format(code)
 
 def write_file(filename, content):
     with open(filename, 'wb') as f:
@@ -57,29 +57,29 @@ def write_test_file(idx, suffix, style, code, name=None):
     filename = TEST_FILE.format(idx, suffix)
     write_file(filename, TEST_TEMPLATE.format(index=idx, value=style,
                                               char=get_html_entity(code),
-                                              code='U+{:04X}'.format(code),
+                                              code='U+{0:04X}'.format(code),
                                               title=name))
-    print("== {} {}".format(filename, REF_FILE.format(idx)))
+    print("== {0} {1}".format(filename, REF_FILE.format(idx)))
 
 idx = 10
 def write_files(style, code):
     global idx
     idx += 1
     fill, shape = style
-    basic_style = "{} {}".format(fill, shape)
+    basic_style = "{0} {1}".format(fill, shape)
     write_file(REF_FILE.format(idx),
                REF_TEMPLATE.format(basic_style, get_html_entity(code)))
     suffix = iter(SUFFIXES)
     write_test_file(idx, next(suffix), basic_style, code)
-    write_test_file(idx, next(suffix), "{} {}".format(shape, fill), code)
+    write_test_file(idx, next(suffix), "{0} {1}".format(shape, fill), code)
     if fill == 'filled':
         write_test_file(idx, next(suffix), shape, code)
     if shape == 'circle':
         write_test_file(idx, next(suffix), fill, code, fill + ', horizontal')
 
-print("# START tests from {}".format(__file__))
+print("# START tests from {0}".format(__file__))
 for name, code, _ in DATA_SET:
     write_files(('filled', name), code)
 for name, _, code in DATA_SET:
     write_files(('open', name), code)
-print("# END tests from {}".format(__file__))
+print("# END tests from {0}".format(__file__))

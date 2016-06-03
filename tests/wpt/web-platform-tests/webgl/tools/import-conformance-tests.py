@@ -15,16 +15,16 @@ PATCHES = [
 ]
 
 def usage():
-    print("Usage: {} version destination [existing_webgl_repo]".format(sys.argv[0]))
+    print("Usage: {0} version destination [existing_webgl_repo]".format(sys.argv[0]))
     sys.exit(1)
 
 def get_tests(base_dir, file_name, tests_list):
     list_file = os.path.join(base_dir, file_name)
     if not os.path.isfile(list_file):
-        print("Test list ({}) not found".format(list_file))
+        print("Test list ({0}) not found".format(list_file))
         sys.exit(1)
 
-    print("Processing: {}".format(list_file))
+    print("Processing: {0}".format(list_file))
 
     with open(list_file, "r") as f:
         for line in f:
@@ -54,8 +54,8 @@ def process_test(test):
             if not script_tag_found and "<script" in line:
                 indent = ' ' * line.index('<')
                 script_tag_found = True
-                os.write(new, "{}<script src=/resources/testharness.js></script>\n".format(indent))
-                os.write(new, "{}<script src=/resources/testharnessreport.js></script>\n".format(indent))
+                os.write(new, "{0}<script src=/resources/testharness.js></script>\n".format(indent))
+                os.write(new, "{0}<script src=/resources/testharnessreport.js></script>\n".format(indent))
             os.write(new, line)
 
     os.close(new)
@@ -73,21 +73,21 @@ def main():
     version = args.version
     destination = args.destination
 
-    print("Trying to import WebGL conformance test suite {} into {}".format(version, destination))
+    print("Trying to import WebGL conformance test suite {0} into {1}".format(version, destination))
 
     if args.existing_repo:
         directory = args.existing_repo
-        print("Using existing WebGL repository: {}".format(directory))
+        print("Using existing WebGL repository: {0}".format(directory))
     else:
         directory = tempfile.mkdtemp()
-        print("Cloning WebGL repository into temporary directory {}".format(directory))
+        print("Cloning WebGL repository into temporary directory {0}".format(directory))
         subprocess.check_call(["git", "clone", KHRONOS_REPO_URL, directory])
 
     suite_dir = os.path.join(directory, "conformance-suites", version)
-    print("Test suite directory: {}".format(suite_dir))
+    print("Test suite directory: {0}".format(suite_dir))
 
     if not os.path.isdir(suite_dir):
-        print("Test suite directory ({}) not found, aborting...".format(suite_dir))
+        print("Test suite directory ({0}) not found, aborting...".format(suite_dir))
         sys.exit(1)
 
     # We recursively copy all the test suite to `destination`
@@ -100,7 +100,7 @@ def main():
 
     test_count = len(tests)
 
-    print("Found {} tests.".format(test_count))
+    print("Found {0} tests.".format(test_count))
     print("Removing non-test html files")
 
     # To use binary search, which speeds things up a little
@@ -116,7 +116,7 @@ def main():
             f = os.path.join(dirpath, f)
             pos = bisect.bisect_left(tests, f)
             if pos == test_count or tests[pos] != f:
-                print("Removing: {}".format(f))
+                print("Removing: {0}".format(f))
                 os.remove(f)
 
     # Insert our harness into the tests
@@ -131,8 +131,8 @@ def main():
             patch = os.path.join(this_dir, patch)
             subprocess.check_call(["patch", "-d", destination, file_name, patch])
         except subprocess.CalledProcessError:
-            print("Automatic patch failed for {}".format(file_name))
-            print("Please review the WPT integration and update {} accordingly".format(os.path.basename(patch)))
+            print("Automatic patch failed for {0}".format(file_name))
+            print("Please review the WPT integration and update {0} accordingly".format(os.path.basename(patch)))
 
 if __name__ == '__main__':
     main()

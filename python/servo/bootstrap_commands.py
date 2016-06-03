@@ -144,7 +144,7 @@ class MachCommands(CommandBase):
         # a directory of the name `rust-std-TRIPLE` inside and then a `lib` directory.
         # This `lib` directory needs to be extracted and merged with the `rustc/lib`
         # directory from the host compiler above.
-        lib_dir = path.join(install_dir, "rustc-nightly-{}".format(host_triple()),
+        lib_dir = path.join(install_dir, "rustc-nightly-{0}".format(host_triple()),
                             "rustc", "lib", "rustlib")
 
         # ensure that the libs for the host's target is downloaded
@@ -156,7 +156,7 @@ class MachCommands(CommandBase):
             target_lib_dir = path.join(lib_dir, target_triple)
             if path.exists(target_lib_dir):
                 # No need to check for force. If --force the directory is already deleted
-                print("Rust lib for target {} already downloaded.".format(target_triple), end=" ")
+                print("Rust lib for target {0} already downloaded.".format(target_triple), end=" ")
                 print("Use |bootstrap-rust --force| to download again.")
                 continue
 
@@ -173,7 +173,7 @@ class MachCommands(CommandBase):
                                       "rustc", "lib", "rustlib", target_triple))
             shutil.rmtree(path.join(install_dir, "rust-std-nightly-%s" % target_triple))
 
-            print("Rust {} libs ready.".format(target_triple))
+            print("Rust {0} libs ready.".format(target_triple))
 
     @Command('bootstrap-rust-docs',
              description='Download the Rust documentation',
@@ -288,7 +288,7 @@ class MachCommands(CommandBase):
         gitversion_output = subprocess.check_output(["git", "--version"])
         gitversion = LooseVersion(gitversion_output.split(" ")[-1])
         if gitversion < LooseVersion("1.8.1"):
-            print("Git version 1.8.1 or above required. Current version is {}"
+            print("Git version 1.8.1 or above required. Current version is {0}"
                   .format(gitversion))
             sys.exit(1)
         submodules = subprocess.check_output(["git", "submodule", "status"])

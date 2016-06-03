@@ -50,8 +50,8 @@ def write_test_file(idx, suffix, wm, orient, value, position):
     filename = TEST_FILE.format(idx, suffix)
     write_file(filename, TEST_TEMPLATE.format(
         value=value, wm=wm, orient=orient, index=idx, position=position,
-        title=(wm if orient == "mixed" else "{}, {}".format(wm, orient))))
-    reftest_items.append("== {} {}".format(filename, REF_FILE.format(idx)))
+        title=(wm if orient == "mixed" else "{0}, {1}".format(wm, orient))))
+    reftest_items.append("== {0} {1}".format(filename, REF_FILE.format(idx)))
 
 def write_test_files(wm, orient, pos1, pos2):
     idx = (REF_MAP_MIXED if orient == "mixed" else REF_MAP_SIDEWAYS)[pos1]
@@ -72,8 +72,8 @@ for wm in WRITING_MODES:
         if wm != "horizontal-tb":
             write_test_files(wm, "sideways", pos1, pos2)
 
-print("# START tests from {}".format(__file__))
+print("# START tests from {0}".format(__file__))
 reftest_items.sort()
 for item in reftest_items:
     print(item)
-print("# END tests from {}".format(__file__))
+print("# END tests from {0}".format(__file__))

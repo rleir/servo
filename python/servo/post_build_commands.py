@@ -223,7 +223,7 @@ class PostBuildCommands(CommandBase):
             dev_flag = ""
 
         target_dir = os.path.dirname(binary_path)
-        output_apk = "{}.apk".format(binary_path)
+        output_apk = "{0}.apk".format(binary_path)
         try:
             with cd(path.join("support", "android", "build-apk")):
                 subprocess.check_call(["cargo", "run", "--", dev_flag, "-o", output_apk, "-t", target_dir,

@@ -89,15 +89,15 @@ def check_length(file_name, idx, line):
 def check_whatwg_specific_url(idx, line):
     match = re.search(r"https://html\.spec\.whatwg\.org/multipage/[\w-]+\.html#([\w\:-]+)", line)
     if match is not None:
-        preferred_link = "https://html.spec.whatwg.org/multipage/#{}".format(match.group(1))
-        yield (idx + 1, "link to WHATWG may break in the future, use this format instead: {}".format(preferred_link))
+        preferred_link = "https://html.spec.whatwg.org/multipage/#{0}".format(match.group(1))
+        yield (idx + 1, "link to WHATWG may break in the future, use this format instead: {0}".format(preferred_link))
 
 
 def check_whatwg_single_page_url(idx, line):
     match = re.search(r"https://html\.spec\.whatwg\.org/#([\w\:-]+)", line)
     if match is not None:
-        preferred_link = "https://html.spec.whatwg.org/multipage/#{}".format(match.group(1))
-        yield (idx + 1, "links to WHATWG single-page url, change to multi page: {}".format(preferred_link))
+        preferred_link = "https://html.spec.whatwg.org/multipage/#{0}".format(match.group(1))
+        yield (idx + 1, "links to WHATWG single-page url, change to multi page: {0}".format(preferred_link))
 
 
 def check_whitespace(idx, line):
@@ -158,7 +158,7 @@ def check_flake8(file_name, contents):
 
 def check_lock(file_name, contents):
     def find_reverse_dependencies(dependency, version, content):
-        dependency_prefix = "{} {}".format(dependency, version)
+        dependency_prefix = "{0} {1}".format(dependency, version)
         for package in itertools.chain([content["root"]], content["package"]):
             for dependency in package.get("dependencies", []):
                 if dependency.startswith(dependency_prefix):
@@ -185,7 +185,7 @@ def check_lock(file_name, contents):
         for version in versions:
             if version != highest:
                 reverse_dependencies = "\n".join(
-                    "\t\t{}".format(n)
+                    "\t\t{0}".format(n)
                     for n in find_reverse_dependencies(name, version, content)
                 )
                 substitutions = {
@@ -471,7 +471,7 @@ def check_spec(file_name, lines):
     # Pattern representing a line with comment
     comment_patt = re.compile("^\s*///?.+$")
 
-    pattern = "impl {}Methods for {} {{".format(file_name, file_name)
+    pattern = "impl {0}Methods for {1} {{".format(file_name, file_name)
     brace_count = 0
     in_impl = False
     for idx, line in enumerate(lines):
@@ -556,7 +556,7 @@ def scan(faster=False):
 
     error = None
     for error in errors:
-        print "\033[94m{}\033[0m:\033[93m{}\033[0m: \033[91m{}\033[0m".format(*error)
+        print "\033[94m{0}\033[0m:\033[93m{1}\033[0m: \033[91m{2}\033[0m".format(*error)
 
     if error is None:
         print "\033[92mtidy reported no errors.\033[0m"

@@ -397,7 +397,9 @@ class CommandBase(object):
     def android_build_dir(self, dev):
         return path.join(self.get_target_dir(), "arm-linux-androideabi", "debug" if dev else "release")
 
-    def ensure_bootstrapped(self, targets=[]):
+    def ensure_bootstrapped(self, targets=None):
+        if targets is None:
+            targets = []
         if self.context.bootstrapped:
             return
 

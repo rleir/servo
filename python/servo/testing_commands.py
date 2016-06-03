@@ -77,7 +77,9 @@ class MachCommands(CommandBase):
                 if path.isfile(filepath) and os.access(filepath, os.X_OK):
                     return filepath
 
-    def run_test(self, prefix, args=[], release=False):
+    def run_test(self, prefix, args=None, release=False):
+        if args is None:
+            args = []
         t = self.find_test(prefix, release=release)
         if t:
             return call([t] + args, env=self.build_env())

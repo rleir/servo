@@ -150,7 +150,9 @@ class MockTable(dict):
     tests are overridden.
     """
 
-    def __init__(self, copy_from={}):
+    def __init__(self, copy_from=None):
+        if copy_from is None:
+            copy_from = {}
         if isinstance(copy_from, dict):
             copy_from = copy_from.items()
         for key, value in copy_from:
@@ -172,7 +174,7 @@ class MockRequest(object):
     This mimics mod_python request.
     """
 
-    def __init__(self, uri=None, headers_in={}, connection=None, method='GET',
+    def __init__(self, uri=None, headers_in=None, connection=None, method='GET',
                  protocol='HTTP/1.1', is_https=False):
         """Construct an instance.
 
@@ -185,6 +187,8 @@ class MockRequest(object):
 
         See the document of mod_python Request for details.
         """
+        if headers_in is None:
+            headers_in = {}
         self.uri = uri
         self.unparsed_uri = uri
         self.connection = connection

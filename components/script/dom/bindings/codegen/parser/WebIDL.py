@@ -3467,7 +3467,7 @@ class IDLMaplikeOrSetlikeOrIterableBase(IDLInterfaceMember):
                                    self.maplikeOrSetlikeOrIterableType),
                                   [self.location, member.location])
 
-    def addMethod(self, name, members, allowExistingOperations, returnType, args=[],
+    def addMethod(self, name, members, allowExistingOperations, returnType, args=None,
                   chromeOnly=False, isPure=False, affectsNothing=False, newObject=False):
         """
         Create an IDLMethod based on the parameters passed in.
@@ -3489,6 +3489,8 @@ class IDLMaplikeOrSetlikeOrIterableBase(IDLInterfaceMember):
         - newObject means the method creates and returns a new object.
 
         """
+        if args is None:
+            args = []
         # Only add name to lists for collision checks if it's not chrome
         # only.
         if chromeOnly:

@@ -123,16 +123,20 @@ class WebDriver(searchcontext.SearchContext):
         alert_.get_text()
         return alert_
 
-    def execute_script(self, script, args=[]):
+    def execute_script(self, script, args=None):
         """Execute a Javascript script in the current browsing context."""
+        if args is None:
+            args = []
         return self.execute(
             'POST',
             '/execute',
             'executeScript',
             { 'script': script, 'args': args })
 
-    def execute_script_async(self, script, args=[]):
+    def execute_script_async(self, script, args=None):
         """Execute a Javascript script in the current browsing context."""
+        if args is None:
+            args = []
         return self.execute(
             'POST',
             '/execute_async',

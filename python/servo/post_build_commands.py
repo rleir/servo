@@ -135,7 +135,9 @@ class PostBuildCommands(CommandBase):
     @CommandArgument(
         'params', nargs='...',
         help="Command-line arguments to be passed through to Servo")
-    def rr_record(self, release=False, dev=False, params=[]):
+    def rr_record(self, release=False, dev=False, params=None):
+        if params is None:
+                params = []
         env = self.build_env()
         env["RUST_BACKTRACE"] = "1"
 

@@ -147,16 +147,20 @@ def _filter_and_format_frame_object(frame, mask, frame_filters):
 
 
 def create_binary_frame(
-    message, opcode=common.OPCODE_BINARY, fin=1, mask=False, frame_filters=[]):
+    message, opcode=common.OPCODE_BINARY, fin=1, mask=False, frame_filters=None):
     """Creates a simple binary frame with no extension, reserved bit."""
+    if frame_filters is None:
+        frame_filters = []
 
     frame = Frame(fin=fin, opcode=opcode, payload=message)
     return _filter_and_format_frame_object(frame, mask, frame_filters)
 
 
 def create_text_frame(
-    message, opcode=common.OPCODE_TEXT, fin=1, mask=False, frame_filters=[]):
+    message, opcode=common.OPCODE_TEXT, fin=1, mask=False, frame_filters=None):
     """Creates a simple text frame with no extension, reserved bit."""
+    if frame_filters is None:
+        frame_filters = []
 
     encoded_message = message.encode('utf-8')
     return create_binary_frame(encoded_message, opcode, fin, mask,
@@ -294,8 +298,10 @@ def parse_frame(receive_bytes, logger=None,
 class FragmentedFrameBuilder(object):
     """A stateful class to send a message as fragments."""
 
-    def __init__(self, mask, frame_filters=[], encode_utf8=True):
+    def __init__(self, mask, frame_filters=None, encode_utf8=True):
         """Constructs an instance."""
+        if frame_filters is None:
+            frame_filters = []
 
         self._mask = mask
         self._frame_filters = frame_filters
@@ -354,15 +360,21 @@ def _create_control_frame(opcode, body, mask, frame_filters):
     return _build_frame(header, frame.payload, mask)
 
 
-def create_ping_frame(body, mask=False, frame_filters=[]):
+def create_ping_frame(body, mask=False, frame_filters=None):
+    if frame_filters is None:
+        frame_filters = []
     return _create_control_frame(common.OPCODE_PING, body, mask, frame_filters)
 
 
-def create_pong_frame(body, mask=False, frame_filters=[]):
+def create_pong_frame(body, mask=False, frame_filters=None):
+    if frame_filters is None:
+        frame_filters = []
     return _create_control_frame(common.OPCODE_PONG, body, mask, frame_filters)
 
 
-def create_close_frame(body, mask=False, frame_filters=[]):
+def create_close_frame(body, mask=False, frame_filters=None):
+    if frame_filters is None:
+        frame_filters = []
     return _create_control_frame(
         common.OPCODE_CLOSE, body, mask, frame_filters)
 

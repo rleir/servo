@@ -4056,13 +4056,31 @@ class ClassMember(ClassItem):
 
 
 class CGClass(CGThing):
-    def __init__(self, name, bases=[], members=[], constructors=[],
-                 destructor=None, methods=[],
-                 typedefs=[], enums=[], unions=[], templateArgs=[],
-                 templateSpecialization=[],
+    def __init__(self, name, bases=None, members=None, constructors=None,
+                 destructor=None, methods=None,
+                 typedefs=None, enums=None, unions=None, templateArgs=None,
+                 templateSpecialization=None,
                  disallowCopyConstruction=False, indent='',
                  decorators='',
                  extradeclarations=''):
+        if bases is None:
+            bases = []
+        if members is None:
+            members = []
+        if constructors is None:
+            constructors = []
+        if methods is None:
+            methods = []
+        if typedefs is None:
+            typedefs = []
+        if enums is None:
+            enums = []
+        if unions is None:
+            unions = []
+        if templateArgs is None:
+            templateArgs = []
+        if templateSpecialization is None:
+            templateSpecialization = []
         CGThing.__init__(self)
         self.name = name
         self.bases = bases
@@ -5535,7 +5553,11 @@ class CGNativeMember(ClassMethod):
 
 class CGCallback(CGClass):
     def __init__(self, idlObject, descriptorProvider, baseName, methods,
-                 getters=[], setters=[]):
+                 getters=None, setters=None):
+        if getters is None:
+            getters = []
+        if setters is None:
+            setters = []
         self.baseName = baseName
         self._deps = idlObject.getDeps()
         name = idlObject.identifier.name

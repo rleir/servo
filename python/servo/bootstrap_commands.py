@@ -112,7 +112,9 @@ class MachCommands(CommandBase):
                      action='append',
                      default=[],
                      help='Download rust stdlib for specified target')
-    def bootstrap_rustc(self, force=False, target=[]):
+    def bootstrap_rustc(self, force=False, target=None):
+        if target is None:
+                target = []
         rust_dir = path.join(
             self.context.sharedir, "rust", self.rust_path())
         date = self.rust_path().split("/")[0]
